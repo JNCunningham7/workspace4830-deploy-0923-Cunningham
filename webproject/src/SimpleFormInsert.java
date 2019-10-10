@@ -34,6 +34,7 @@ public class SimpleFormInsert extends HttpServlet {
       
       String insertSql = " INSERT INTO TaskList (id, TASKNAME, DETAILS, DUEDATE, STATUS) values (default, ?, ?, ?, ?)";
       String insertSqlC = " INSERT INTO completedTasks (id, TASKNAME, DETAILS, DUEDATE) values (default, ?, ?, ?)";
+      String removeSql = " DELETE FROM TaskList WHERE TASKNAME = ? ";
 
       try {
          DBConnection.getDBConnection();
@@ -44,6 +45,12 @@ public class SimpleFormInsert extends HttpServlet {
         	 	preparedStmt.setString(2, details);
         	 	preparedStmt.setString(3, dueDate);
         	 	preparedStmt.execute();
+         }
+         else if (status.compareTo("Remove") == 0) {
+        	 	PreparedStatement preparedStmt = connection.prepareStatement(removeSql);
+     	 	preparedStmt.setString(1, taskName);
+     	 	preparedStmt.execute();
+        	 
          }
          else {
          PreparedStatement preparedStmt = connection.prepareStatement(insertSql);
@@ -62,34 +69,61 @@ public class SimpleFormInsert extends HttpServlet {
       // Set response content type
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
-      if (status.compareTo("Complete") != 0) {
-      
-      String title = "Insert New Task";
-      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
-      out.println(docType + //
-            "<html>\n" + //
-            "<head><title>" + title + "</title></head>\n" + //
-            "<body bgcolor=\"#f0f0f0\">\n" + //
-            "<h2 align=\"center\">" + title + "</h2>\n" + //
-            "<ul>\n" + //
+      if (status.compareTo("Complete") == 0) {
+    	  String title = "Inserted Completed Task";
+          String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
+            out.println(docType + //
+                  "<html>\n" + //
+                  "<head><title>" + title + "</title></head>\n" + //
+                  "<body bgcolor=\"#f0f0f0\">\n" + //
+                  "<h2 align=\"center\">" + title + "</h2>\n" + //
+                  "<ul>\n" + //
 
-            "  <li><b>Task</b>: " + taskName + "\n" + //
-            "  <li><b>Details</b>: " + details + "\n" + //
-            "  <li><b>Due Date</b>: " + dueDate + "\n" + //
-            "  <li><b>Status</b>: " + status + "\n" + //
-    		  	"</ul>"+ 
-    		  	
-			"<form action=\"SimpleFormSearch\" method=\"POST\">" +
-  	
-				"<input type= \"hidden\" name=\"keyword\"> <br />" +
-		
-				"<input type=\"submit\" value=\"See Full Task List\" />" +
-			"</form>" +
-    		  "\n");  
+                  "  <li><b>Task</b>: " + taskName + "\n" + //
+                  "  <li><b>Details</b>: " + details + "\n" + //
+                  "  <li><b>Due Date</b>: " + dueDate + "\n" + //
+
+                  "</ul>" +
+                  
+                  "<form action=\"SimpleFormSearch\" method=\"POST\">" +
+    	
+  					"<input type= \"hidden\" name=\"keyword\"> <br />" +
+  		
+  					"<input type=\"submit\" value=\"See Full Task List\" />" +
+  				"</form>" + 
+                  "\n");
+    	  
       }
+      else if (status.compareTo("Remove") == 0) {
+    	  String title = "Removed Task";
+          String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
+            out.println(docType + //
+                  "<html>\n" + //
+                  "<head><title>" + title + "</title></head>\n" + //
+                  "<body bgcolor=\"#f0f0f0\">\n" + //
+                  "<h2 align=\"center\">" + title + "</h2>\n" + //
+                  "<ul>\n" + //
+                  
+                  "  <li><b>Task</b>: " + taskName + "\n" + //
+                  "  <li><b>Details</b>: " + details + "\n" + //
+                  "  <li><b>Due Date</b>: " + dueDate + "\n" + //
+                  "  <li><b>Status</b>: " + status + "\n" + //
+                  
+                  "</ul>" +
+                  
+                  "<form action=\"SimpleFormSearch\" method=\"POST\">" +
+    	
+  					"<input type= \"hidden\" name=\"keyword\"> <br />" +
+  		
+  					"<input type=\"submit\" value=\"See Full Task List\" />" +
+  				"</form>" + 
+                  "\n");
+    	  
+      }
+      
       else {
-    	  	String title = "Insert New Task";
-        String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
+    	  String title = "Inserted New Task";
+          String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
           out.println(docType + //
                 "<html>\n" + //
                 "<head><title>" + title + "</title></head>\n" + //
@@ -100,12 +134,20 @@ public class SimpleFormInsert extends HttpServlet {
                 "  <li><b>Task</b>: " + taskName + "\n" + //
                 "  <li><b>Details</b>: " + details + "\n" + //
                 "  <li><b>Due Date</b>: " + dueDate + "\n" + //
-
-                "</ul>\n");
+                "  <li><b>Status</b>: " + status + "\n" + //
+        		  	"</ul>"+ 
+        		  	
+    			"<form action=\"SimpleFormSearch\" method=\"POST\">" +
+      	
+    				"<input type= \"hidden\" name=\"keyword\"> <br />" +
+    		
+    				"<input type=\"submit\" value=\"See Full Task List\" />" +
+    			"</form>" +
+        		  "\n");  
       }
       
       out.println("<a href=/webproject/simpleFormSearch.html>Search Task List</a> <br>");
-      out.println("<a href=/webproject/simpleFormInsert.html>Insert New Task</a> <br>");
+      out.println("<a href=/webproject/simpleFormInsert.html>Insert/Remove New Task</a> <br>");
       out.println("</body></html>");
       
    	  }

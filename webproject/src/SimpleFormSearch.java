@@ -93,8 +93,17 @@ public class SimpleFormSearch extends HttpServlet {
                 out.println("<b>Due Date: </b>" + dueDate + "<br>");
              }
           }
+         
+         out.println(docType + //
+                 "<form action=\"SimpleFormSearch\" method=\"POST\">" +
+   	
+ 					"<input type= \"hidden\" name=\"keyword\"> <br />" +
+ 		
+ 					"<input type=\"submit\" value=\"See Full Task List\" />" +
+ 				"</form>" + 
+                 "\n");
          out.println("<a href=/webproject/simpleFormSearch.html>Search Task List</a> <br>");
-         out.println("<a href=/webproject/simpleFormInsert.html>Insert New Task</a> <br>");
+         out.println("<a href=/webproject/simpleFormInsert.html>Insert/Remove New Task</a> <br>");
          out.println("</body></html>");
          rs.close();
          preparedStatement.close();
